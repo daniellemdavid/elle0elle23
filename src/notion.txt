@@ -1,0 +1,85 @@
+// const dotenv = require('dotenv').config();
+// import 'process.env';
+const database_id = process.env.NOTION_DATABASE_ID;
+//found database id in the database url on notion...after the slash before the question mark.
+
+//notion sdk
+const { Client } = require('@notionhq/client');
+//authorization
+const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
+
+/*to do:
+    x1. get/query a database
+    x2. map through each page data to get id property
+    3. for each page 
+        -use page id as block id
+    3b.  get block children list
+    4.  for each child 
+            filter out type != paragraph 
+            get.results[0].text...plain_text
+*/
+
+const pageIds = []
+const postTitle = [];
+let posts = [];
+
+// 1.)
+async function queryDb() {
+    const response = await notion.databases.query({ 
+        database_id: process.env.NOTION_DATABASE_ID
+    });
+
+    response.results
+        // aysnc does not work in the filter function why?
+        .filter( (p) => p['properties']['status']['select']['name'] == "post it" 
+                            && p['properties']['title']['title'][0]
+                            && p['properties']['status']['select']['name'])  
+        //i can use aysnc or leave it out in the .forEach why?                 
+        .forEach( (page) => {
+            pageIds.push(page.id)
+            postTitle.push(page['properties']['title']['title'][0].plain_text);
+        })
+    // console.log(postTitle)
+
+    const arr = [];
+    for await (let page of pageIds){
+        const responseChild = await notion.blocks.children.list({
+            block_id: page,
+            page_size: 50,
+          });
+
+        arr.push({
+            'page id': page,
+            children: responseChild
+        })
+    
+    }
+
+    return arr;
+}
+
+const run = async () => { 
+    const child = await queryDb()
+
+    for await (let id of child){
+        let concatpost = [];
+        child[child.indexOf(id)].children.results.forEach( (block) => {
+            if (block.paragraph !== undefined && block.paragraph.text[0] !== undefined) 
+                concatpost.push(block.paragraph.text[0].plain_text);   
+        }) 
+
+        posts.push({
+            'id':id['page id'],
+            post: concatpost.join(" ")
+        })
+    }
+    for (let i = 0; i < postTitle.length; i++){
+        posts[i].title = postTitle[i];
+    }
+    return posts;
+}
+
+// run()
+
+export default run;

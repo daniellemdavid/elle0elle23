@@ -1,0 +1,81 @@
+:root{
+  --deep-orange: rgb(242,142,38);
+      /* color: var(--deep-orange); */
+  /* background-color: var(--deep-orange); */
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+  --app-width: 25vw;
+  --dark-gray: rgb(60, 78, 78);
+}
+.container{
+  display: flex;
+  position: relative;
+  
+  line-height: 1.3em;
+  word-spacing: .15em;
+  letter-spacing: .07em;
+
+  
+}
+.App {
+  width: var(--app-width);
+  min-height: 100vh;
+  background-color: var(--deep-orange);
+  padding: 0px 40px;
+  box-shadow: 0 0 30px 0 gray inset;
+  /* border-right: 2px dashed rgb(187, 128, 19); */
+  z-index: 0;
+}
+
+.App-logo {
+  height: 40vh;
+  pointer-events: none;
+}
+.App2 {
+  text-align: center;
+  width: 75vw;
+  min-height: 100vh;
+  background-color: whitesmoke;
+  padding: 0 35px;
+  /* z-index: -2; */
+}
+
+.main{
+  text-align: left;
+  color: darkslategray;
+  font-weight: 500;
+  
+}
+.welcome{
+  margin-bottom: 3em;
+  /* padding: 0px 0 50px 0;
+  border-bottom: 30px solid rgba(211, 211, 211, 0.191); */
+}
+.postTitle{
+  color: gray;
+  font-family: Robo;
+  font-size: 1.3em;
+  text-align: right;
+  border: 1px solid rgba(128, 128, 128, 0.261);
+  border-radius: 9px;
+  padding: 6px;
+  padding-right: 9px;
+  min-height: 20px;
+}
+.remote{
+  position: absolute;
+  /* border: 1px solid red; */
+  /* width: 30%; */
+    width: 23%;
+  left: 2%;
+  bottom: 2%;
+  height: 13%;
+  background-color: rgba(211, 211, 211, 0.911);
+  border-radius: 10px;
+  transition: width 2s;
+  /* z-index: -1; */
+}
+.remote:hover{
+  width: 96%;
+  transition: width 2s;
+  /* transition-timing-function: ease-in-out; */
+}
